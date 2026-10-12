@@ -1,4 +1,4 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const rspack = require('@rspack/core');
 const defaultsDeep = require('lodash.defaultsdeep');
 const path = require('path');
 
@@ -17,10 +17,16 @@ const base = {
     module: {
         rules: [{
             test: /\.js$/,
-            loader: 'babel-loader',
+            loader: 'builtin:swc-loader',
             include: path.resolve(__dirname, 'src'),
-            query: {
-                presets: [['@babel/preset-env']]
+            options: {
+                jsc: {
+                    parser: {
+                        syntax: 'ecmascript',
+                        jsx: true,
+                        dynamicImport: true
+                    }
+                }
             }
         },
         {
@@ -121,7 +127,7 @@ module.exports = [
             hints: false
         },
         plugins: base.plugins.concat([
-            new CopyWebpackPlugin([{
+            new rspack.CopyRspackPlugin([{
                 from: 'node_modules/scratch-blocks/media',
                 to: 'media'
             }, {

@@ -25,6 +25,8 @@ const platform = require('./tw-platform.js');
 const safeStringify = require('../util/tw-safe-stringify.js');
 const MonitorState = require('./tw-monitor-state.js');
 
+const ts = require('../transpiler/transpiler.js');
+
 // Virtual I/O devices.
 const Clock = require('../io/clock');
 const Cloud = require('../io/cloud');
@@ -955,6 +957,10 @@ class Runtime extends EventEmitter {
 
     // -----------------------------------------------------------------------------
     // -----------------------------------------------------------------------------
+
+    setScriptDirty(scriptID) {
+        return ts.setScriptDirty(scriptID);
+    }
 
     // Helper function for initializing the addCloudVariable function
     _initializeAddCloudVariable (newCloudDataManager) {
@@ -2448,11 +2454,13 @@ class Runtime extends EventEmitter {
         this.emit(Runtime.PROJECT_START);
         this.updateCurrentMSecs();
         this.ioDevices.clock.resetProjectTimer();
-        this.targets.forEach(target => target.clearEdgeActivatedValues());
+        this.targets.forEach(target => {target.clearEdgeActivatedValues()});
         // Inform all targets of the green flag.
         for (let i = 0; i < this.targets.length; i++) {
             this.targets[i].onGreenFlag();
         }
+        console.log("RECOMPILED");
+        ts.transpile(this.targets);
         this.startHats('event_whenflagclicked');
     }
 
@@ -3239,6 +3247,7 @@ class Runtime extends EventEmitter {
     handleProjectLoaded () {
         this.emit(Runtime.PROJECT_LOADED);
         this.resetRunId();
+        ts.initializeProjectState();
     }
 
     /**

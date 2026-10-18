@@ -788,6 +788,7 @@ class Blocks {
         }
         }
 
+        this.runtime.setScriptDirty(this.getTopLevelScript(args.id));
         this.emitProjectChanged();
 
         this.resetCache();
@@ -829,6 +830,7 @@ class Blocks {
                 oldParent.next = null;
             }
             this._blocks[e.id].parent = null;
+            this.runtime.setScriptDirty(this.getTopLevelScript(e.oldParent));
             didChange = true;
         }
 
@@ -862,6 +864,7 @@ class Blocks {
                 };
             }
             this._blocks[e.id].parent = e.newParent;
+            this.runtime.setScriptDirty(this.getTopLevelScript(e.newParent));
             didChange = true;
         }
         this.resetCache();

@@ -9,7 +9,7 @@ function type_data_variable(blockID, declSet, inputType) {
     for(const decl of declSet[varName]) {
         TFAPass.injectVarTypeSet(decl, inputType);
     }
-    return new Set();
+    return new Set(inputType);
 }
 
 function type_data_setvariableto(blockID, declSet) {
@@ -23,7 +23,18 @@ function type_data_setvariableto(blockID, declSet) {
 }
 
 function data_variable(blockID) {
-    return new CGPass.LiteralType({string: "%rstring", num: "%rnum", bool: "%rbool"}, []);
+    const {fields, inputs} = getScratchBlock(blockID);
+    const varName = fields.VARIABLE.id;
+    let literalType = new CGPass.LiteralType();
+
+    for(const varType of CGPass.blockTypes[blockID]) {
+        const test = CGPass.useLocal(varName, varType);
+        const [localName] = CGPass.allocName(1);
+        literalType.push(varType, localName, [`    ${localName} = load ptr ${test}`]);
+        
+    }
+
+    return literalType;
 }
 
 function data_setvariableto(blockID) {

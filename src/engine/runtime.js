@@ -2459,7 +2459,7 @@ class Runtime extends EventEmitter {
         for (let i = 0; i < this.targets.length; i++) {
             this.targets[i].onGreenFlag();
         }
-        console.log("RECOMPILED");
+        
         ts.transpile(this.targets);
         this.startHats('event_whenflagclicked');
     }

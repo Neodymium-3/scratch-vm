@@ -58,7 +58,6 @@ async function transpile(data, debug=false) {
     GlobalContext.initialize(data, projectState);
     IOPass.run();
     TFAPass.run();
-    console.log("CODEGEN PASS:");
     CGPass.bindTypeContext(TFAPass.blockTypes, TFAPass.blockInjects);
 
     const code = CGPass.run();

@@ -45,11 +45,11 @@ module.exports = class CGPass {
     }
 
     static allocBlockName(n) {
-        return Array.from({length: n}, () => `b${this.llvmBlockID++}`);
+        return Array.from({length: n}, () => `%b${this.llvmBlockID++}`);
     }
 
     static allocName(n) {
-        return Array.from({length: n}, () => `v${this.llvmNameID++}`);
+        return Array.from({length: n}, () => `%v${this.llvmNameID++}`);
     }
 
     static newBlock(blockName, description=null) {

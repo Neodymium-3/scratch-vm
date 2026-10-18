@@ -21,11 +21,9 @@ function type_text(blockID, declSet, inputType) {
 function text(blockID) {
     const {fields} = getScratchBlock(blockID);
     const text = fields.TEXT.value;
-    const context = CGPass.blockTypes[blockID];
-    
     let regs = new CGPass.LiteralType();
 
-    for(const textType of context) {
+    for(const textType of CGPass.blockTypes[blockID]) {
         if(textType == "string") {
             const [stringName, reg] = CGPass.allocName(2);
             regs.push("string", reg, [
